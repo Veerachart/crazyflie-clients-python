@@ -137,6 +137,7 @@ class InputDevice(InputReaderInterface):
             self.data.thrust = self._limit_thrust(self.data.thrust,
                                                   self.data.althold,
                                                   self.data.estop)
+            
         if self.limit_yaw:
             self.data.yaw = self._scale_and_deadband_yaw(self.data.yaw)
 

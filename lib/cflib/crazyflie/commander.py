@@ -64,13 +64,13 @@ class Commander():
         The arguments roll/pitch/yaw/trust is the new setpoints that should
         be sent to the copter
         """
-        if thrust > 0xFFFF or thrust < 0:
-            raise ValueError("Thrust must be between 0 and 0xFFFF")
+        if thrust > 65535 or thrust < -65535:
+            raise ValueError("Thrust must be between -65535 and 65535")
 
         if self._x_mode:
             roll, pitch = 0.707 * (roll - pitch), 0.707 * (roll + pitch)
 
         pk = CRTPPacket()
         pk.port = CRTPPort.COMMANDER
-        pk.data = struct.pack('<fffH', roll, -pitch, yaw, thrust)
+        pk.data = struct.pack('<fffi', roll, -pitch, yaw, thrust)
         self._cf.send_packet(pk)

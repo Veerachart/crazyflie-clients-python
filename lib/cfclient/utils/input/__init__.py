@@ -66,7 +66,7 @@ from .mux.nomux import NoMux
 from .mux.takeovermux import TakeOverMux
 from .mux.takeoverselectivemux import TakeOverSelectiveMux
 
-MAX_THRUST = 65000
+MAX_THRUST = 65535
 
 class JoystickReader(object):
     """
@@ -380,20 +380,20 @@ class JoystickReader(object):
                         data.toggled.rollNeg or data.toggled.rollPos:
                     self.rp_trim_updated.call(self.trim_roll, self.trim_pitch)
 
-                # Thrust might be <0 here, make sure it's not otherwise we'll
-                # get an error.
-                if data.thrust < 0:
-                    data.thrust = 0
-                if data.thrust > 0xFFFF:
-                    data.thrust = 0xFFFF
-
                 # If we are using alt hold the data is not in a percentage
                 if not data.althold:
                     data.thrust = JoystickReader.p2t(data.thrust)
+                    
+                # Make negative thrust possible, but within [-65535, 65535]
+                if data.thrust < -65535:
+                    data.thrust = -65535
+                if data.thrust > 65535:
+                    data.thrust = 65535
 
-                self.input_updated.call(data.roll + self.trim_roll,
+                self.input_updated.call(0,              # Not used
                                         data.pitch + self.trim_pitch,
                                         data.yaw, data.thrust)
+                logger.info(data.yaw)
             else:
                 self.input_updated.call(0, 0, 0, 0)
         except Exception:

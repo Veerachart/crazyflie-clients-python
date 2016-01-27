@@ -381,6 +381,6 @@ class _IncomingPacketHandler(Thread):
                     if (cb[0] != 0xFF):
                         found = True
 
-            if not found:
-                logger.warning("Got packet on header (%d,%d) but no callback "
-                               "to handle it", pk.port, pk.channel)
+            #if not found:
+            #    logger.warning("Got packet on header (%d,%d) but no callback "
+            #                   "to handle it", pk.port, pk.channel)
